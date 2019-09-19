@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">TestTodoApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_add_item">AddItemActivity</string>
+    <string name="title_string">Title</string>
+    <string name="done_before_string">Done Before</string>
+    <string name="remind_string">Remind</string>
+    <string-array name="reminder_spinner_options">
+        <item>None</item>
+        <item>10 Minutes Before</item>
+        <item>30 Minutes Before</item>
+        <item>1 Hour Before</item>
+    </string-array>
+</resources>
