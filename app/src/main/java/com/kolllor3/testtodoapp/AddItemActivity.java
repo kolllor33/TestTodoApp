@@ -1,9 +1,12 @@
 package com.kolllor3.testtodoapp;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -14,10 +17,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.kolllor3.testtodoapp.utils.Utilities;
 
-public class AddItemActivity extends AppCompatActivity {
+import java.util.Calendar;
+import java.util.Date;
 
-    private EditText doneBeforeEditText, titleEditText;
+public class AddItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+
+    private EditText titleEditText;
+    private Button doneBeforeEditText;
     private Spinner reminderSpinner;
+
+    private String title;
+    private int reminderId;
+    private long endDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +43,13 @@ public class AddItemActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        Calendar c = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, AddItemActivity.this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_YEAR));
+
         doneBeforeEditText = findViewById(R.id.done_before_input);
+        doneBeforeEditText.setOnClickListener(click ->{
+            datePickerDialog.show();
+        });
         titleEditText = findViewById(R.id.title_input);
         reminderSpinner = findViewById(R.id.reminder_spinner);
 
@@ -41,11 +58,17 @@ public class AddItemActivity extends AppCompatActivity {
         reminderSpinner.setAdapter(spinnerAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setOnClickListener(view -> getDataFromInputs());
     }
 
+    private void getDataFromInputs(){
+        title = titleEditText.getText().toString();
+        reminderId = reminderSpinner.getSelectedItemPosition();
+    }
 
+    private boolean isDataValid(String title, int reminderId, long endDate){
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -65,4 +88,10 @@ public class AddItemActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, dayOfMonth);
+        endDate = c.getTimeInMillis();
+    }
 }

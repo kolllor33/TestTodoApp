@@ -24,14 +24,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <EditText
+    <Button
         android:id="@+id/done_before_input"
-        style="@style/Widget.AppCompat.AutoCompleteTextView"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:inputType="date"
         android:labelFor="@+id/done_before_txt"
+        android:text="@string/date_picker_button_string"
         android:textSize="@dimen/default_font_size"
         app:layout_constraintBaseline_toBaselineOf="@+id/done_before_txt"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
