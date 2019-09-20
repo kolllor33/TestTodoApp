@@ -40,6 +40,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
     androidTestImplementation "android.arch.core:core-testing:$room_version"
+    androidTestImplementation "android.arch.core:core-testing:$room_version"
 
 
     // Test helpers

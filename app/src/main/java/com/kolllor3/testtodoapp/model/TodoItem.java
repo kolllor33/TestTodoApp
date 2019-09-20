@@ -17,4 +17,8 @@ public class TodoItem {
 
     public long endDate;
 
+    public boolean isEqual(TodoItem item){
+        return reminderId == item.reminderId && isDone == item.isDone && title.equals(item.title) && endDate == item.endDate;
+    }
+
 }

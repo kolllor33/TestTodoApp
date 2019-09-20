@@ -2,29 +2,27 @@ package com.kolllor3.testtodoapp;
 
 import android.content.Context;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
-
 import com.kolllor3.testtodoapp.database.TodoDataBase;
 import com.kolllor3.testtodoapp.database.TodoItemDao;
 import com.kolllor3.testtodoapp.model.TodoItem;
+import com.kolllor3.testtodoapp.testUtils.LiveDataTestUtil;
 import com.kolllor3.testtodoapp.utils.Utilities;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -35,7 +33,7 @@ public class DataBaseTest {
     private TodoDataBase db;
 
     @Rule
-    public TestRule rule = new InstantTaskExecutorRule();
+    public InstantTaskExecutorRule rule = new InstantTaskExecutorRule();
 
     @Before
     public void initDb(){
@@ -62,12 +60,12 @@ public class DataBaseTest {
         item.title = Utilities.getRandomString(10);
 
         TodoItem item2 = new TodoItem();
-        item2.endDate = date + 100;
+        item2.endDate = date + 2;
         item2.reminderId = 1;
         item2.title = Utilities.getRandomString(10);
 
         TodoItem item3 = new TodoItem();
-        item3.endDate = date + 90;
+        item3.endDate = date + 1;
         item3.reminderId = 2;
         item3.title = Utilities.getRandomString(10);
 
@@ -75,31 +73,32 @@ public class DataBaseTest {
 
         List<TodoItem> byId = LiveDataTestUtil.getValue(todoItemDao.getAllTodoItems());
         if (byId != null) {
-            assertEquals(byId.get(0), item);
-            assertEquals(byId.get(1), item2);
-            assertEquals(byId.get(2), item3);
+            assertTrue(byId.get(0).isEqual(item));
+            assertTrue(byId.get(1).isEqual(item2));
+            assertTrue(byId.get(2).isEqual(item3));
         }
 
-        List<TodoItem> byDate = todoItemDao.getAllTodoItemsOrderEndDate().getValue();
+        List<TodoItem> byDate = LiveDataTestUtil.getValue(todoItemDao.getAllTodoItemsOrderEndDate());
         if (byDate != null) {
-            assertEquals(byDate.get(0), item2);
-            assertEquals(byDate.get(1), item3);
-            assertEquals(byDate.get(2), item);
+            assertTrue(byDate.get(0).isEqual(item));
+            assertTrue(byDate.get(1).isEqual(item3));
+            assertTrue(byDate.get(2).isEqual(item2));
         }
 
         if (byId != null) {
             todoItemDao.updateDoneStateById(byId.get(0).id, true);
-            byId = todoItemDao.getAllTodoItems().getValue();
+            byId = LiveDataTestUtil.getValue(todoItemDao.getAllTodoItems());
             assertTrue(byId.get(0).isDone);
+            todoItemDao.updateDoneStateById(byId.get(0).id, false);
         }
-
+        item3.id = byId.get(2).id;
         todoItemDao.delete(item3);
 
-        byId = todoItemDao.getAllTodoItems().getValue();
+        byId = LiveDataTestUtil.getValue(todoItemDao.getAllTodoItems());
         if (byId != null) {
-            assertEquals(byId.size(),2);
-            assertEquals(byId.get(0), item2);
-            assertEquals(byId.get(1), item3);
+            assertEquals(2, byId.size());
+            assertTrue(byId.get(0).isEqual(item));
+            assertTrue(byId.get(1).isEqual(item2));
         }
 
     }
