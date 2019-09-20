@@ -2,6 +2,7 @@ package com.kolllor3.testtodoapp;
 
 import android.content.Context;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -14,7 +15,9 @@ import com.kolllor3.testtodoapp.utils.Utilities;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.util.Date;
@@ -31,11 +34,15 @@ public class DataBaseTest {
     private TodoItemDao todoItemDao;
     private TodoDataBase db;
 
+    @Rule
+    public TestRule rule = new InstantTaskExecutorRule();
 
     @Before
     public void initDb(){
         Context context = ApplicationProvider.getApplicationContext();
-        db = Room.inMemoryDatabaseBuilder(context, TodoDataBase.class).build();
+        db = Room.inMemoryDatabaseBuilder(context, TodoDataBase.class)
+                .allowMainThreadQueries()
+                .build();
         todoItemDao = db.getTodoItemDao();
     }
 
@@ -46,7 +53,7 @@ public class DataBaseTest {
 
     @Test
     @LargeTest
-    public void TodoDbFunctionsTest() {
+    public void TodoDbFunctionsTest() throws InterruptedException {
         long date = new Date().getTime();
 
         TodoItem item = new TodoItem();
@@ -66,7 +73,7 @@ public class DataBaseTest {
 
         todoItemDao.insertAll(item, item2, item3);
 
-        List<TodoItem> byId = todoItemDao.getAllTodoItems().getValue();
+        List<TodoItem> byId = LiveDataTestUtil.getValue(todoItemDao.getAllTodoItems());
         if (byId != null) {
             assertEquals(byId.get(0), item);
             assertEquals(byId.get(1), item2);

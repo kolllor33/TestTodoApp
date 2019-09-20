@@ -34,10 +34,13 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
 
+
     //room install
     def room_version = "2.2.0-rc01"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
+    androidTestImplementation "android.arch.core:core-testing:$room_version"
+
 
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
