@@ -6,6 +6,7 @@
     <string name="done_before_string">Done Before</string>
     <string name="remind_string">Remind</string>
     <string name="date_picker_button_string">Click To Pick</string>
+    <string name="title_error_string">Please enter a title.</string>
     <string-array name="reminder_spinner_options">
         <item>None</item>
         <item>10 Minutes Before</item>

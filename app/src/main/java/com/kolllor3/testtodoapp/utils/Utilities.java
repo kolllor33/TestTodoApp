@@ -1,5 +1,7 @@
 package com.kolllor3.testtodoapp.utils;
 
+import android.os.AsyncTask;
+
 import java.util.Random;
 
 public class Utilities {
@@ -18,5 +20,9 @@ public class Utilities {
         for (int i = 0; i < length; i++)
             builder.append((char)(r.nextInt(96) + 32));
         return builder.toString();
+    }
+
+    public static void doInBackground(Runnable runnable){
+        AsyncTask.execute(runnable);
     }
 }

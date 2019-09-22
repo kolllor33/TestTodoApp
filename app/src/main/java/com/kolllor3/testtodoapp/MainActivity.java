@@ -5,16 +5,20 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kolllor3.testtodoapp.database.TodoDataBase;
+import com.kolllor3.testtodoapp.model.TodoItem;
+import com.kolllor3.testtodoapp.utils.Utilities;
 
 public class MainActivity extends AppCompatActivity {
 
     TodoDataBase dataBase;
+    private final int ADD_ITEM_ACTIVITY_REQUEST_CODE = 9000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +32,21 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view ->{
             Intent i = new Intent(this, AddItemActivity.class);
-            startActivity(i);
+            startActivityForResult(i, ADD_ITEM_ACTIVITY_REQUEST_CODE);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == ADD_ITEM_ACTIVITY_REQUEST_CODE){
+            if(Utilities.isNotNull(data) && Utilities.isNotNull(data.getExtras())){
+                Bundle b = data.getExtras();
+                TodoItem item = new TodoItem(b.getInt("reminderId"),b.getString("title"), b.getLong("endDate"));
+                Utilities.doInBackground(() -> dataBase.getTodoItemDao().insertAll(item));
+            }
+        }
     }
 
     @Override

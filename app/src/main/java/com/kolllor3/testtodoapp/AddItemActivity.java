@@ -1,7 +1,11 @@
 package com.kolllor3.testtodoapp;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -23,7 +27,7 @@ import java.util.Date;
 public class AddItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private EditText titleEditText;
-    private Button doneBeforeEditText;
+    private Button doneBeforeButton;
     private Spinner reminderSpinner;
 
     private String title;
@@ -46,8 +50,8 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         Calendar c = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, AddItemActivity.this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_YEAR));
 
-        doneBeforeEditText = findViewById(R.id.done_before_input);
-        doneBeforeEditText.setOnClickListener(click ->{
+        doneBeforeButton = findViewById(R.id.done_before_input);
+        doneBeforeButton.setOnClickListener(click ->{
             datePickerDialog.show();
         });
         titleEditText = findViewById(R.id.title_input);
@@ -64,9 +68,31 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private void getDataFromInputs(){
         title = titleEditText.getText().toString();
         reminderId = reminderSpinner.getSelectedItemPosition();
+        if(isDataValid(title, reminderId, endDate)){
+            Intent returnIntent = new Intent();
+            Bundle b = new Bundle();
+            b.putString("title", title);
+            b.putInt("reminderId", reminderId);
+            b.putLong("endDate", endDate);
+            returnIntent.putExtras(b);
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }
     }
 
     private boolean isDataValid(String title, int reminderId, long endDate){
+        if(!(Utilities.isNotNull(title) && !title.isEmpty())){
+            titleEditText.setError(getString(R.string.title_error_string));
+            return false;
+        }
+        if(reminderId < 0 || reminderId > reminderSpinner.getCount() - 1){
+            reminderSpinner.setBackgroundColor(Color.RED);
+            return false;
+        }
+        if(endDate < 0){
+            doneBeforeButton.setTextColor(Color.RED);
+            return false;
+        }
         return true;
     }
 
