@@ -6,6 +6,7 @@ import com.kolllor3.testtodoapp.database.TodoDataBase;
 import com.kolllor3.testtodoapp.database.TodoItemDao;
 import com.kolllor3.testtodoapp.model.TodoItem;
 import com.kolllor3.testtodoapp.testUtils.LiveDataTestUtil;
+import com.kolllor3.testtodoapp.testUtils.TodoItemsFactory;
 import com.kolllor3.testtodoapp.utils.Utilities;
 
 import org.junit.After;
@@ -52,37 +53,23 @@ public class DataBaseTest {
     @Test
     @LargeTest
     public void TodoDbFunctionsTest() throws InterruptedException {
-        long date = new Date().getTime();
 
-        TodoItem item = new TodoItem();
-        item.endDate = date;
-        item.reminderId = 0;
-        item.title = Utilities.getRandomString(10);
+        TodoItem[] todoItems = TodoItemsFactory.createTestTodoList();
 
-        TodoItem item2 = new TodoItem();
-        item2.endDate = date + 2;
-        item2.reminderId = 1;
-        item2.title = Utilities.getRandomString(10);
-
-        TodoItem item3 = new TodoItem();
-        item3.endDate = date + 1;
-        item3.reminderId = 2;
-        item3.title = Utilities.getRandomString(10);
-
-        todoItemDao.insertAll(item, item2, item3);
+        todoItemDao.insertAll(todoItems);
 
         List<TodoItem> byId = LiveDataTestUtil.getValue(todoItemDao.getAllTodoItems());
         if (byId != null) {
-            assertTrue(byId.get(0).isEqual(item));
-            assertTrue(byId.get(1).isEqual(item2));
-            assertTrue(byId.get(2).isEqual(item3));
+            assertTrue(byId.get(0).isEqual(todoItems[0]));
+            assertTrue(byId.get(1).isEqual(todoItems[1]));
+            assertTrue(byId.get(2).isEqual(todoItems[2]));
         }
 
         List<TodoItem> byDate = LiveDataTestUtil.getValue(todoItemDao.getAllTodoItemsOrderEndDate());
         if (byDate != null) {
-            assertTrue(byDate.get(0).isEqual(item));
-            assertTrue(byDate.get(1).isEqual(item3));
-            assertTrue(byDate.get(2).isEqual(item2));
+            assertTrue(byDate.get(0).isEqual(todoItems[0]));
+            assertTrue(byDate.get(1).isEqual(todoItems[2]));
+            assertTrue(byDate.get(2).isEqual(todoItems[1]));
         }
 
         if (byId != null) {
@@ -91,14 +78,14 @@ public class DataBaseTest {
             assertTrue(byId.get(0).isDone);
             todoItemDao.updateDoneStateById(byId.get(0).id, false);
         }
-        item3.id = byId.get(2).id;
-        todoItemDao.delete(item3);
+        todoItems[2].id = byId.get(2).id;
+        todoItemDao.delete(todoItems[2]);
 
         byId = LiveDataTestUtil.getValue(todoItemDao.getAllTodoItems());
         if (byId != null) {
             assertEquals(2, byId.size());
-            assertTrue(byId.get(0).isEqual(item));
-            assertTrue(byId.get(1).isEqual(item2));
+            assertTrue(byId.get(0).isEqual(todoItems[0]));
+            assertTrue(byId.get(1).isEqual(todoItems[1]));
         }
 
     }

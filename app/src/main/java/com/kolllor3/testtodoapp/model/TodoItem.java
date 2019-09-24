@@ -17,6 +17,9 @@ public class TodoItem {
 
     public long endDate;
 
+    public TodoItem() {
+    }
+
     public TodoItem(int reminderId, String title, long endDate) {
         this.reminderId = reminderId;
         this.title = title;
