@@ -2,12 +2,17 @@ package com.kolllor3.testtodoapp;
 
 import android.content.Context;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+
 import com.kolllor3.testtodoapp.database.TodoDataBase;
 import com.kolllor3.testtodoapp.database.TodoItemDao;
 import com.kolllor3.testtodoapp.model.TodoItem;
 import com.kolllor3.testtodoapp.testUtils.LiveDataTestUtil;
 import com.kolllor3.testtodoapp.testUtils.TodoItemsFactory;
-import com.kolllor3.testtodoapp.utils.Utilities;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,14 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Date;
 import java.util.List;
-
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

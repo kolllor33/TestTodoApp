@@ -2,17 +2,21 @@ package com.kolllor3.testtodoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kolllor3.testtodoapp.database.TodoDataBase;
 import com.kolllor3.testtodoapp.model.TodoItem;
+import com.kolllor3.testtodoapp.model.TodoItemModelView;
 import com.kolllor3.testtodoapp.utils.Utilities;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         dataBase = Room.databaseBuilder(this, TodoDataBase.class, "todoDb").build();
+
+        TodoItemModelView todoItemModelView = ViewModelProviders.of(this).get(TodoItemModelView.class);
+
+        todoItemModelView.getTodoItems(dataBase.getTodoItemDao()).observe(this, todoItems -> {
+            for (TodoItem i: todoItems) {
+                Log.i("todoItem changed", i.title);
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view ->{
