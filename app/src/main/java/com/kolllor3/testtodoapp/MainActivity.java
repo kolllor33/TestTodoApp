@@ -35,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
         TodoItemModelView todoItemModelView = ViewModelProviders.of(this).get(TodoItemModelView.class);
 
+        todoItemModelView.init();
+
         todoItemModelView.getTodoItems(dataBase.getTodoItemDao()).observe(this, todoItems -> {
-            for (TodoItem i: todoItems) {
-                Log.i("todoItem changed", i.title);
-            }
+            todoItemModelView.getAdapter().setTodoItems(todoItems);
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
