@@ -1,6 +1,7 @@
 package com.kolllor3.testtodoapp.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "todoItems")
@@ -20,6 +21,7 @@ public class TodoItem {
     public TodoItem() {
     }
 
+    @Ignore
     public TodoItem(int reminderId, String title, long endDate) {
         this.reminderId = reminderId;
         this.title = title;
