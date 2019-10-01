@@ -19,6 +19,7 @@ public class TodoItemModelView extends ViewModel {
 
     public void init(){
         adapter = new TodoListAdapter(this, R.layout.todo_list_item);
+        todoItems = new MutableLiveData<>();
     }
 
     public TodoListAdapter getAdapter() {

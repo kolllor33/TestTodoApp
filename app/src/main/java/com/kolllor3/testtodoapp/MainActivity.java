@@ -9,12 +9,14 @@ import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kolllor3.testtodoapp.database.TodoDataBase;
+import com.kolllor3.testtodoapp.databinding.ContentMainBindingImpl;
 import com.kolllor3.testtodoapp.model.TodoItem;
 import com.kolllor3.testtodoapp.model.TodoItemModelView;
 import com.kolllor3.testtodoapp.utils.Utilities;
@@ -31,11 +33,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //this returns null(needed to bind adapter to recycelerView via xml)
+        ContentMainBindingImpl activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         dataBase = Room.databaseBuilder(this, TodoDataBase.class, "todoDb").build();
 
         TodoItemModelView todoItemModelView = ViewModelProviders.of(this).get(TodoItemModelView.class);
 
-        todoItemModelView.init();
+        if(savedInstanceState == null)
+            todoItemModelView.init();
+
+        activityBinding.setModelView(todoItemModelView);
 
         todoItemModelView.getTodoItems(dataBase.getTodoItemDao()).observe(this, todoItems -> {
             todoItemModelView.getAdapter().setTodoItems(todoItems);
