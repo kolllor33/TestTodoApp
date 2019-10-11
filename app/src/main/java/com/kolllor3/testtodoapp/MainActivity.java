@@ -2,21 +2,19 @@ package com.kolllor3.testtodoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kolllor3.testtodoapp.database.TodoDataBase;
-import com.kolllor3.testtodoapp.databinding.ContentMainBindingImpl;
 import com.kolllor3.testtodoapp.model.TodoItem;
 import com.kolllor3.testtodoapp.model.TodoItemModelView;
 import com.kolllor3.testtodoapp.utils.Utilities;
@@ -33,17 +31,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //this returns null(needed to bind adapter to recycelerView via xml)
-        ContentMainBindingImpl activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-        dataBase = Room.databaseBuilder(this, TodoDataBase.class, "todoDb").build();
+        dataBase = TodoDataBase.getDatabase(this);
 
         TodoItemModelView todoItemModelView = ViewModelProviders.of(this).get(TodoItemModelView.class);
 
-        if(savedInstanceState == null)
+        RecyclerView todoRecyclerView = findViewById(R.id.todo_items_list);
+
+        if(Utilities.isNull(savedInstanceState))
             todoItemModelView.init();
 
-        activityBinding.setModelView(todoItemModelView);
+        todoRecyclerView.setAdapter(todoItemModelView.getAdapter());
+        todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         todoItemModelView.getTodoItems(dataBase.getTodoItemDao()).observe(this, todoItems -> {
             todoItemModelView.getAdapter().setTodoItems(todoItems);
@@ -64,7 +62,13 @@ public class MainActivity extends AppCompatActivity {
             if(Utilities.isNotNull(data) && Utilities.isNotNull(data.getExtras())){
                 Bundle b = data.getExtras();
                 TodoItem item = new TodoItem(b.getInt("reminderId"),b.getString("title"), b.getLong("endDate"));
-                Utilities.doInBackground(() -> dataBase.getTodoItemDao().insertAll(item));
+                Utilities.doInBackground(() -> {
+                    try {
+                        dataBase.getTodoItemDao().insertAll(item);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                });
             }
         }
     }

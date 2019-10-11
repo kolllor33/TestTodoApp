@@ -19,7 +19,6 @@ public class TodoItemModelView extends ViewModel {
 
     public void init(){
         adapter = new TodoListAdapter(this, R.layout.todo_list_item);
-        todoItems = new MutableLiveData<>();
     }
 
     public TodoListAdapter getAdapter() {
@@ -28,7 +27,14 @@ public class TodoItemModelView extends ViewModel {
 
     public LiveData<List<TodoItem>> getTodoItems(TodoItemDao todoItemDao){
         if (Utilities.isNull(todoItems)){
-            Utilities.doInBackground(() -> todoItems = todoItemDao.getAllTodoItems());
+            todoItems = new MutableLiveData<>();
+            Utilities.doInBackground(() -> {
+                try {
+                    todoItems = todoItemDao.getAllTodoItems();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            });
         }
         return todoItems;
     }
