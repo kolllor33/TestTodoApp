@@ -11,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kolllor3.testtodoapp.database.TodoDataBase;
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == ADD_ITEM_ACTIVITY_REQUEST_CODE){
+        if(requestCode == ADD_ITEM_ACTIVITY_REQUEST_CODE){
             if(Utilities.isNotNull(data) && Utilities.isNotNull(data.getExtras())){
                 Bundle b = data.getExtras();
                 TodoItem item = new TodoItem(b.getInt("reminderId"),b.getString("title"), b.getLong("endDate"));
