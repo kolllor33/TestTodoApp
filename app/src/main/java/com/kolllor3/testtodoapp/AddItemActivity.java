@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -18,11 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.kolllor3.testtodoapp.utils.Utilities;
 
+import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class AddItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -47,13 +47,11 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        Calendar c = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, AddItemActivity.this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_YEAR));
+        Calendar c = Calendar.getInstance(TimeZone.getDefault());
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, AddItemActivity.this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 
         doneBeforeButton = findViewById(R.id.done_before_input);
-        doneBeforeButton.setOnClickListener(click ->{
-            datePickerDialog.show();
-        });
+        doneBeforeButton.setOnClickListener(click -> datePickerDialog.show());
         titleEditText = findViewById(R.id.title_input);
         reminderSpinner = findViewById(R.id.reminder_spinner);
 
@@ -119,5 +117,8 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         Calendar c = Calendar.getInstance();
         c.set(year, month, dayOfMonth);
         endDate = c.getTimeInMillis();
+        //set button text to data
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        doneBeforeButton.setText(format.format(c.getTime()));
     }
 }
