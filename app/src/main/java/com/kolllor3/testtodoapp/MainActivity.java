@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,15 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.kolllor3.testtodoapp.database.TodoDataBase;
 import com.kolllor3.testtodoapp.model.TodoItem;
-import com.kolllor3.testtodoapp.model.TodoItemModelView;
+import com.kolllor3.testtodoapp.model.TodoItemViewModel;
 import com.kolllor3.testtodoapp.utils.Utilities;
 
 public class MainActivity extends AppCompatActivity {
 
-    TodoDataBase dataBase;
     private final int ADD_ITEM_ACTIVITY_REQUEST_CODE = 9000;
+    private TodoItemViewModel todoItemViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,20 +31,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dataBase = TodoDataBase.getDatabase(this);
-
-        TodoItemModelView todoItemModelView = ViewModelProviders.of(this).get(TodoItemModelView.class);
+        todoItemViewModel = ViewModelProviders.of(this).get(TodoItemViewModel.class);
 
         RecyclerView todoRecyclerView = findViewById(R.id.todo_items_list);
+        TextView noItemTextView = findViewById(R.id.error_list_message);
 
         if(Utilities.isNull(savedInstanceState))
-            todoItemModelView.init();
+            todoItemViewModel.init();
 
-        todoRecyclerView.setAdapter(todoItemModelView.getAdapter());
+        todoRecyclerView.setAdapter(todoItemViewModel.getAdapter());
         todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        todoItemModelView.getTodoItems(dataBase.getTodoItemDao()).observe(this, todoItems -> {
-            todoItemModelView.getAdapter().setTodoItems(todoItems);
+        todoItemViewModel.getTodoItems().observe(this, todoItems -> {
+            if(todoItems.size() > 0)
+                noItemTextView.setVisibility(View.GONE);
+            todoItemViewModel.getAdapter().setTodoItems(todoItems);
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -61,13 +63,7 @@ public class MainActivity extends AppCompatActivity {
             if(Utilities.isNotNull(data) && Utilities.isNotNull(data.getExtras())){
                 Bundle b = data.getExtras();
                 TodoItem item = new TodoItem(b.getInt("reminderId"),b.getString("title"), b.getLong("endDate"));
-                Utilities.doInBackground(() -> {
-                    try {
-                        dataBase.getTodoItemDao().insertAll(item);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                });
+                todoItemViewModel.insert(item);
             }
         }
     }

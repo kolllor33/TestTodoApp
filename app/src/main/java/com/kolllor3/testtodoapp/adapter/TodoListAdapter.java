@@ -10,17 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kolllor3.testtodoapp.BR;
 import com.kolllor3.testtodoapp.model.TodoItem;
-import com.kolllor3.testtodoapp.model.TodoItemModelView;
+import com.kolllor3.testtodoapp.model.TodoItemViewModel;
 
 import java.util.List;
 
 public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoItemViewHolder> {
 
     private List<TodoItem> todoItems;
-    private TodoItemModelView modelView;
+    private TodoItemViewModel modelView;
     private int layoutId;
 
-    public TodoListAdapter(TodoItemModelView modelView, int layoutId) {
+    public TodoListAdapter(TodoItemViewModel modelView, int layoutId) {
         this.modelView = modelView;
         this.layoutId = layoutId;
     }
@@ -54,16 +54,16 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoIt
         todoItems = items;
     }
 
-    public class TodoItemViewHolder extends RecyclerView.ViewHolder {
+    class TodoItemViewHolder extends RecyclerView.ViewHolder {
         private ViewDataBinding binding;
 
         //this constructor is tho bind the data and the xml together
-        public TodoItemViewHolder(ViewDataBinding binding) {
+        TodoItemViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        void bind(TodoItem item, TodoItemModelView model){
+        void bind(TodoItem item, TodoItemViewModel model){
             binding.setVariable(BR.item, item);
             binding.setVariable(BR.viewModel, model);
         }
