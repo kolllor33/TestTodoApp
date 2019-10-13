@@ -52,6 +52,11 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoIt
 
     public void setTodoItems(List<TodoItem> items){
         todoItems = items;
+        notifyDataSetChanged();
+    }
+
+    public List<TodoItem> getTodoItems() {
+        return todoItems;
     }
 
     class TodoItemViewHolder extends RecyclerView.ViewHolder {
