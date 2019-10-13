@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kolllor3.testtodoapp.BR;
 import com.kolllor3.testtodoapp.model.TodoItem;
 import com.kolllor3.testtodoapp.model.TodoItemViewModel;
+import com.kolllor3.testtodoapp.utils.Utilities;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoIt
     @Override
     public void onBindViewHolder(@NonNull TodoItemViewHolder holder, int position) {
         TodoItem item = todoItems.get(position);
+        item.endDateString = Utilities.getStringFromDate(item.endDate);
         holder.bind(item, modelView);
     }
 
@@ -53,10 +55,6 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoIt
     public void setTodoItems(List<TodoItem> items){
         todoItems = items;
         notifyDataSetChanged();
-    }
-
-    public List<TodoItem> getTodoItems() {
-        return todoItems;
     }
 
     class TodoItemViewHolder extends RecyclerView.ViewHolder {

@@ -24,7 +24,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{item.title}"
+            android:layout_marginStart="20dp"
             android:textSize="@dimen/big_font_size"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:text="@{item.endDateString}"
+            android:textSize="@dimen/default_font_size"/>
 
 </LinearLayout>
 

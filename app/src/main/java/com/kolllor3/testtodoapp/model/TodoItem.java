@@ -18,6 +18,9 @@ public class TodoItem {
 
     public long endDate;
 
+    @Ignore
+    public String endDateString;
+
     public TodoItem() {
     }
 

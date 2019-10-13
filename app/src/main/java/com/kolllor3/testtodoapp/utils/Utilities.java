@@ -2,6 +2,8 @@ package com.kolllor3.testtodoapp.utils;
 
 import android.os.AsyncTask;
 
+import java.text.DateFormat;
+import java.util.Locale;
 import java.util.Random;
 
 public class Utilities {
@@ -20,6 +22,11 @@ public class Utilities {
         for (int i = 0; i < length; i++)
             builder.append((char)(r.nextInt(96) + 32));
         return builder.toString();
+    }
+
+    public static String getStringFromDate(long date){
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        return format.format(date);
     }
 
     public static void doInBackground(Runnable runnable){
