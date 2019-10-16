@@ -26,4 +26,9 @@ public class TodoItemRepository {
     public void insertTodoItem(TodoItem item){
         Utilities.doInBackground(() -> todoItemDao.insertAll(item));
     }
+
+    public void setTodoItemDao(TodoItemDao todoItemDao) {
+        this.todoItemDao = todoItemDao;
+        this.todoItems = this.todoItemDao.getAllTodoItems();
+    }
 }

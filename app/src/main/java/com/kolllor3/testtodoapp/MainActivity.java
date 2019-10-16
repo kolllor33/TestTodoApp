@@ -89,4 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public TodoItemViewModel getTodoItemViewModel() {
+        return todoItemViewModel;
+    }
 }

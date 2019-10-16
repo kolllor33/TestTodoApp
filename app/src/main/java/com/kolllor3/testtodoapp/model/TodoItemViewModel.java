@@ -35,6 +35,10 @@ public class TodoItemViewModel extends AndroidViewModel {
         return todoItems;
     }
 
+    public TodoItemRepository getTodoItemRepository() {
+        return todoItemRepository;
+    }
+
     public void insert(TodoItem item) { todoItemRepository.insertTodoItem(item); }
 
 }
